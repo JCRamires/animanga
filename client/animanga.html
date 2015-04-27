@@ -1,0 +1,32 @@
+<head>
+    <title>animanga</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>List of works</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                MENU
+            </div>
+            <div class="col-md-8">
+                {{#each works}} {{> work}} {{/each}}
+            </div>
+        </div>
+    </div>
+</body>
+
+<template name="work">
+    <div class="media">
+        <div class="media-left">
+            <img class="media-object" src="http://placehold.it/200x300" alt="{{name}}">
+        </div>
+        <div class="media-body">
+            <h4 class="media-heading">{{name}}</h4>
+        </div>
+    </div>
+</template>
