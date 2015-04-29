@@ -1,6 +1,8 @@
 Works = new Mongo.Collection("works");
 AnimeDetails = new Mongo.Collection("anime_details");
 MangaDetails = new Mongo.Collection("manga_details");
+Genres = new Mongo.Collection("genres");
+Genres._ensureIndex({name: 1}, {unique: 1});
 
 Meteor.startup(function () {
     if (Works.find().count() === 0) {
@@ -10,17 +12,23 @@ Meteor.startup(function () {
 
 Meteor.methods({
     initializeDB: function () {
+        console.log("Fetching works");
         var result = HTTP.call("GET", "http://www.animenewsnetwork.com/encyclopedia/reports.xml", {
             params: {
-                id: 155,
-                nlist: "all"
+                id: 155
+                // nlist: "all"
             }
         });
 
+        var workIDs = [];
         var works = xml2js.parseStringSync(result.content);
         works.report.item.forEach(function (entry) {
             Meteor.call("addWork", entry);
+            workIDs.push(parseInt(entry.id));
         });
+
+        console.log("Fetching work details");
+        Meteor.call("workDetailsBatch", workIDs);
     },
     addWork: function (entry) {
         Works.insert({
@@ -32,7 +40,6 @@ Meteor.methods({
         })
     },
     getWorkDetails: function (id) {
-        // TODO Persist work details
         var result = HTTP.call("GET", "http://cdn.animenewsnetwork.com/encyclopedia/api.xml", {
             params: {
                 title: id,
@@ -40,6 +47,36 @@ Meteor.methods({
         });
         var details = xml2js.parseStringSync(result.content);
         return details;
+    },
+    workDetailsBatch: function (workIDs) {
+        var batchIDs = [];
+        workIDs.forEach(function (id, index){
+            if(batchIDs.length < 50){
+                batchIDs.push(id);
+            }
+            if(batchIDs.length == 50 || index == workIDs.length){
+                var appendIDs;
+                batchIDs.forEach(function(id, index){
+                    if(index == 0){
+                        appendIDs += id;
+                    } else {
+                        appendIDs += "/" + id;
+                    }
+                });
+
+                var result = HTTP.call("GET", "http://cdn.animenewsnetwork.com/encyclopedia/api.xml", {
+                    params: {
+                        title: batchIDs
+                    }
+                });
+
+                var works = xml2js.parseStringSync(result.content);
+
+                //TODO iterate over works
+
+                batchIDs = [];
+            }
+        });
     }
 });
 
