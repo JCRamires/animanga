@@ -13,7 +13,7 @@ Meteor.startup(function () {
 Meteor.methods({
     initializeDB: function () {
         console.log("Fetching works");
-        var result = HTTP.call("GET", "http://www.animenewsnetwork.com/encyclopedia/reports.xml", {
+        var result = HTTP.get("http://www.animenewsnetwork.com/encyclopedia/reports.xml", {
             params: {
                 id: 155
                 // nlist: "all"
@@ -39,8 +39,12 @@ Meteor.methods({
             vintage: entry.vintage
         })
     },
+    addWorkDetails: function (entry) {
+        //TODO get genre,themes and picture from entry.info
+        //TODO get ratings from entry.ratings
+    },
     getWorkDetails: function (id) {
-        var result = HTTP.call("GET", "http://cdn.animenewsnetwork.com/encyclopedia/api.xml", {
+        var result = HTTP.get("http://cdn.animenewsnetwork.com/encyclopedia/api.xml", {
             params: {
                 title: id,
             }
@@ -58,21 +62,23 @@ Meteor.methods({
                 var appendIDs;
                 batchIDs.forEach(function(id, index){
                     if(index == 0){
-                        appendIDs += id;
+                        appendIDs = id;
                     } else {
                         appendIDs += "/" + id;
                     }
                 });
 
-                var result = HTTP.call("GET", "http://cdn.animenewsnetwork.com/encyclopedia/api.xml", {
-                    params: {
-                        title: batchIDs
-                    }
+                var result = HTTP.get("http://cdn.animenewsnetwork.com/encyclopedia/api.xml", {
+                    query: "title="+appendIDs
                 });
 
                 var works = xml2js.parseStringSync(result.content);
 
-                //TODO iterate over works
+                Object.keys(works.ann).forEach(function (key) {
+                    works.ann[key].forEach(function (entry){
+
+                    };
+                });
 
                 batchIDs = [];
             }
@@ -84,7 +90,6 @@ Meteor.publish("allWorks", function () {
     return Works.find({}, {
         sort: {
             name: 1
-        },
-        limit: 100
+        }
     });
 });
