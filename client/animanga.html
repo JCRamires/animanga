@@ -11,10 +11,18 @@
         </div>
         <div class="row">
             <div class="col-md-4">
-                MENU
+                <h2>Types</h2>
+                {{#each types}} {{>type}} {{/each}}
+
+                <h2>Genres</h2>
+                {{#each genres}} {{>genre}} {{/each}}
+
+                <h2>Themes</h2>
+                {{#each themes}} {{>theme}} {{/each}}
             </div>
             <div class="col-md-8">
-                {{#each works}} {{> work}} {{/each}}
+                <!--{{#each works}} {{> work}} {{/each}}-->
+                {{#each details}} {{> detail}} {{/each}}
             </div>
         </div>
     </div>
@@ -33,4 +41,20 @@
 
 <template name="workDetails">
     {{description}}
+</template>
+
+<template name="genre">
+    {{name}}
+</template>
+
+<template name="type">
+    {{name}}
+</template>
+
+<template name="theme">
+    {{name}}
+</template>
+
+<template name="detail">
+    {{name}}
 </template>
