@@ -14,20 +14,20 @@ Meteor.subscribe("allDetails");
 WorkDetails = new Mongo.Collection("details");
 
 Template.body.helpers({
-    works: function () {
-        return Works.find({});
-    },
-    genres: function () {
-        return Genres.find({});
-    },
-    types: function () {
-        return Types.find({});
-    },
     themes: function () {
         return Themes.find({});
     },
-    details: function() {
+    details: function () {
         //TODO Show details on screen
         return WorkDetails.find({});
+    }
+});
+
+Template.filterForm.helpers({
+    types: function () {
+        return Types.find({});
+    },
+    genres: function () {
+        return Genres.find({});
     }
 });

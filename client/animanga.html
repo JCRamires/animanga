@@ -3,29 +3,24 @@
 </head>
 
 <body>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h1>List of works</h1>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                <h2>Types</h2>
-                {{#each types}} {{>type}} {{/each}}
-
-                <h2>Genres</h2>
-                {{#each genres}} {{>genre}} {{/each}}
-
-                <h2>Themes</h2>
-                {{#each themes}} {{>theme}} {{/each}}
-            </div>
-            <div class="col-md-8">
-                <!--{{#each works}} {{> work}} {{/each}}-->
-                {{#each details}} {{> detail}} {{/each}}
-            </div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>List of works</h1>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-4">
+            {{>filterForm}}
+
+            <h2>Themes</h2>
+            {{#each themes}} {{>theme}} {{/each}}
+        </div>
+        <div class="col-md-8">
+            {{#each details}} {{> detail}} {{/each}}
+        </div>
+    </div>
+</div>
 </body>
 
 <template name="work">
@@ -44,17 +39,45 @@
 </template>
 
 <template name="genre">
-    {{name}}
+    <div class="col-md-4">
+        <label class="checkbox-inline">
+            <input type="checkbox" value="{{name}}"> {{name}}
+        </label>
+    </div>
 </template>
 
 <template name="type">
-    {{name}}
+    <div class="col-md-4">
+        <label class="checkbox-inline">
+            <input type="checkbox" value="{{name}}"> {{name}}
+        </label>
+    </div>
 </template>
 
 <template name="theme">
-    {{name}}
+    {{name}},
 </template>
 
 <template name="detail">
-    {{name}}
+    {{name}},
+</template>
+
+<template name="filterForm">
+    <form>
+        <div class="form-group">
+            <h2>Type</h2>
+            <div id="typeCheckboxes">
+                <div class="row">
+                    {{#each types}} {{>type}} {{/each}}
+                </div>
+            </div>
+
+            <h2>Genre</h2>
+            <div id="genreCheckboxes">
+                <div class="row">
+                    {{#each genres}} {{>genre}} {{/each}}
+                </div>
+            </div>
+        </div>
+    </form>
 </template>

@@ -15,6 +15,7 @@ html-tools@1.0.4
 htmljs@1.0.4
 http@1.1.0
 id-map@1.0.3
+jeremy:selectize@0.12.1_2
 jquery@1.11.3_2
 json@1.0.3
 launch-screen@1.0.2
@@ -29,7 +30,7 @@ mongo@1.1.0
 observe-sequence@1.0.6
 ordered-dict@1.0.3
 peerlibrary:blocking@0.5.2
-peerlibrary:xml2js@0.4.5_2
+peerlibrary:xml2js@0.4.8_1
 random@1.0.3
 reactive-dict@1.1.0
 reactive-var@1.0.5
