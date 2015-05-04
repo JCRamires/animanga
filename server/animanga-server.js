@@ -66,7 +66,7 @@ Meteor.methods({
                 var workInfoValue = workInfo[key]._;
                 if (workfInfoType.toLowerCase() == "genres") {
                     workDetails.genres.push(workInfoValue);
-                    if (Genres.findOne({name: workInfoValue}) == undefined) {
+                    if (Genres.findOne({name: workInfoValue}) === undefined) {
                         Genres.insert({
                             name: workInfoValue
                         });
@@ -144,15 +144,32 @@ Meteor.methods({
     },
     createWorkQueryObject: function (filters) {
         var queryObject = {};
+        if (filters.types !== undefined && filters.types !== "") {
+            var types = {$in: []};
+            filters.types.forEach(function (type) {
+                types.$in.push(type);
+            });
+
+            queryObject.type = types;
+        }
+        if (filters.genres !== undefined && filters.genres !== "") {
+            var genres = {$in: []};
+            filters.genres.forEach(function (genre) {
+                genres.$in.push(genre);
+            });
+
+            queryObject["workDetails.genres"] = genres;
+        }
         if (filters.themes !== undefined && filters.themes !== "") {
             var themes = {$in: []};
             filters.themes.forEach(function (theme) {
                 themes.$in.push(theme);
             });
 
-            queryObject.themes = themes;
-            console.log(queryObject);
+            queryObject["workDetails.themes"] = themes;
         }
+
+        return queryObject;
 
     }
 });
@@ -176,12 +193,12 @@ Meteor.publish("searchThemes", function (query) {
 
 Meteor.publish("filteredWorks", function (filters) {
     if (filters !== null) {
-
         if (filters.themes !== undefined && filters.themes !== "") {
-            var themes = filters.themes.split(",");
-            filters.themes = themes;
+            filters.themes = filters.themes.split(",");
         }
 
-        Meteor.call("createWorkQueryObject", filters);
+        var queryObject = Meteor.call("createWorkQueryObject", filters);
+
+        return Works.find(queryObject);
     }
 });
