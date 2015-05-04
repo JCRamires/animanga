@@ -1,0 +1,13 @@
+{
+  "strict": true,
+  "globals":{
+    "Meteor": false,
+    "Mongo": false,
+    "HTTP": false,
+    "xml2js": false,
+    "Works": false,
+    "Genres": false,
+    "Types": false,
+    "Themes": false
+  }
+}
