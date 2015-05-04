@@ -36,7 +36,7 @@ Template.theme.onRendered(function () {
             return {
                 value: input,
                 text: input
-            }
+            };
         },
         load: function (query, callback) {
             var themes = Themes.find({});

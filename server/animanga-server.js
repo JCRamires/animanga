@@ -43,14 +43,14 @@ Meteor.methods({
             name: entry.name,
             type: entry.type,
             vintage: entry.vintage
-        })
+        });
     },
     addWorkDetails: function (work) {
         Meteor.call("addTypeFromWork", work);
         Meteor.call("addGenresAndThemesFromWork", work);
     },
     addTypeFromWork: function (work) {
-        if (Types.findOne({name: work.$.type}) == undefined) {
+        if (Types.findOne({name: work.$.type}) === undefined) {
             Types.insert({
                 name: work.$.type
             });
@@ -58,33 +58,33 @@ Meteor.methods({
     },
     addGenresAndThemesFromWork: function (work) {
         var workDetails = {work_id: work.$.id, genres: [], themes: []};
-        var workInfo = work["info"];
+        var workInfo = work.info;
 
         if (typeof workInfo === "object") {
             Object.keys(workInfo).forEach(function (key) {
                 var workfInfoType = workInfo[key].$.type;
                 var workInfoValue = workInfo[key]._;
                 if (workfInfoType.toLowerCase() == "genres") {
-                    workDetails["genres"].push(workInfoValue);
+                    workDetails.genres.push(workInfoValue);
                     if (Genres.findOne({name: workInfoValue}) == undefined) {
                         Genres.insert({
                             name: workInfoValue
                         });
                     }
                 } else if (workfInfoType.toLowerCase() == "themes") {
-                    workDetails["themes"].push(workInfoValue);
-                    if (Themes.findOne({name: workInfoValue.toLowerCase()}) == undefined) {
+                    workDetails.themes.push(workInfoValue);
+                    if (Themes.findOne({name: workInfoValue.toLowerCase()}) === undefined) {
                         Themes.insert({
                             name: workInfoValue.toLowerCase()
                         });
                     }
                 } else if (workfInfoType.toLowerCase() == "main title") {
-                    workDetails["name"] = workInfoValue;
+                    workDetails.name = workInfoValue;
                 } else if (workfInfoType.toLowerCase() == "plot summary") {
-                    workDetails["plot"] = workInfoValue;
+                    workDetails.plot = workInfoValue;
                 } else if (workfInfoType.toLowerCase() == "objectionable content") {
                     if (workInfoValue.toLowerCase() == "ma") {
-                        workDetails["mature"] = true;
+                        workDetails.mature = true;
                     }
                 }
             });
@@ -116,7 +116,7 @@ Meteor.methods({
             if (batchIDs.length == 50 || index + 1 == workIDs.length) {
                 var appendIDs;
                 batchIDs.forEach(function (id, index) {
-                    if (index == 0) {
+                    if (index === 0) {
                         appendIDs = id;
                     } else {
                         appendIDs += "/" + id;
@@ -144,13 +144,13 @@ Meteor.methods({
     },
     createWorkQueryObject: function (filters) {
         var queryObject = {};
-        if (filters.themes != undefined && filters.themes != "") {
+        if (filters.themes !== undefined && filters.themes !== "") {
             var themes = {$in: []};
             filters.themes.forEach(function (theme) {
                 themes.$in.push(theme);
             });
 
-            queryObject["themes"] = themes;
+            queryObject.themes = themes;
             console.log(queryObject);
         }
 
@@ -175,9 +175,9 @@ Meteor.publish("searchThemes", function (query) {
 });
 
 Meteor.publish("filteredWorks", function (filters) {
-    if (filters != null) {
+    if (filters !== null) {
 
-        if (filters.themes != undefined && filters.themes != "") {
+        if (filters.themes !== undefined && filters.themes !== "") {
             var themes = filters.themes.split(",");
             filters.themes = themes;
         }
