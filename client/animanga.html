@@ -12,9 +12,6 @@
     <div class="row">
         <div class="col-md-4">
             {{>filterForm}}
-
-            <h2>Themes</h2>
-            {{#each themes}} {{>theme}} {{/each}}
         </div>
         <div class="col-md-8">
             {{#each details}} {{> detail}} {{/each}}
@@ -34,38 +31,11 @@
     </div>
 </template>
 
-<template name="workDetails">
-    {{description}}
-</template>
-
-<template name="genre">
-    <div class="col-md-4">
-        <label class="checkbox-inline">
-            <input type="checkbox" value="{{name}}"> {{name}}
-        </label>
-    </div>
-</template>
-
-<template name="type">
-    <div class="col-md-4">
-        <label class="checkbox-inline">
-            <input type="checkbox" value="{{name}}"> {{name}}
-        </label>
-    </div>
-</template>
-
-<template name="theme">
-    {{name}},
-</template>
-
-<template name="detail">
-    {{name}},
-</template>
-
 <template name="filterForm">
-    <form>
+    <form id="filters">
         <div class="form-group">
             <h2>Type</h2>
+
             <div id="typeCheckboxes">
                 <div class="row">
                     {{#each types}} {{>type}} {{/each}}
@@ -73,11 +43,38 @@
             </div>
 
             <h2>Genre</h2>
+
             <div id="genreCheckboxes">
                 <div class="row">
                     {{#each genres}} {{>genre}} {{/each}}
                 </div>
             </div>
+
+            <div id="themesInput">
+                {{>theme}}
+            </div>
+
         </div>
     </form>
+</template>
+
+<template name="type">
+    <div class="col-md-4">
+        <label class="checkbox-inline">
+            <input type="checkbox" name="types[]" value="{{name}}"> {{name}}
+        </label>
+    </div>
+</template>
+
+<template name="genre">
+    <div class="col-md-4">
+        <label class="checkbox-inline">
+            <input type="checkbox" name="genres[]" value="{{name}}"> {{name}}
+        </label>
+    </div>
+</template>
+
+<template name="theme">
+    <h2>Themes</h2>
+    <input type="text" name="themes" id="themeSelect" placeholder="Type in a theme of your liking">
 </template>

@@ -9,3 +9,4 @@ peerlibrary:xml2js
 http
 twbs:bootstrap
 jeremy:selectize
+pcel:serialize

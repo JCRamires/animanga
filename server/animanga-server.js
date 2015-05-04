@@ -1,5 +1,4 @@
 Works = new Mongo.Collection("works");
-WorkDetails = new Mongo.Collection("workDetails");
 Genres = new Mongo.Collection("genres");
 Genres._ensureIndex({name: 1}, {unique: 1});
 Types = new Mongo.Collection("types");
@@ -9,7 +8,6 @@ Themes._ensureIndex({name: 1}, {unique: 1});
 
 Meteor.startup(function () {
     // Works.remove({});
-    // WorkDetails.remove({});
     // Genres.remove({});
     // Types.remove({});
 
@@ -24,7 +22,7 @@ Meteor.methods({
         var result = HTTP.get("http://www.animenewsnetwork.com/encyclopedia/reports.xml", {
             params: {
                 id: 155,
-                nlist: 100 //or "all"
+                nlist: 200 //or "all"
             }
         });
 
@@ -50,7 +48,6 @@ Meteor.methods({
     addWorkDetails: function (work) {
         Meteor.call("addTypeFromWork", work);
         Meteor.call("addGenresAndThemesFromWork", work);
-        //TODO get ratings from entry.ratings
     },
     addTypeFromWork: function (work) {
         if (Types.findOne({name: work.$.type}) == undefined) {
@@ -60,7 +57,7 @@ Meteor.methods({
         }
     },
     addGenresAndThemesFromWork: function (work) {
-        var workDetails = {id: work.$.id, genres: [], themes: []};
+        var workDetails = {work_id: work.$.id, genres: [], themes: []};
         var workInfo = work["info"];
 
         if (typeof workInfo === "object") {
@@ -76,9 +73,9 @@ Meteor.methods({
                     }
                 } else if (workfInfoType.toLowerCase() == "themes") {
                     workDetails["themes"].push(workInfoValue);
-                    if (Themes.findOne({name: workInfoValue}) == undefined) {
+                    if (Themes.findOne({name: workInfoValue.toLowerCase()}) == undefined) {
                         Themes.insert({
-                            name: workInfoValue
+                            name: workInfoValue.toLowerCase()
                         });
                     }
                 } else if (workfInfoType.toLowerCase() == "main title") {
@@ -86,7 +83,9 @@ Meteor.methods({
                 } else if (workfInfoType.toLowerCase() == "plot summary") {
                     workDetails["plot"] = workInfoValue;
                 } else if (workfInfoType.toLowerCase() == "objectionable content") {
-                    workDetails["mature"] = true;
+                    if (workInfoValue.toLowerCase() == "ma") {
+                        workDetails["mature"] = true;
+                    }
                 }
             });
         }
@@ -94,11 +93,8 @@ Meteor.methods({
         Meteor.call("persistWorkDetails", workDetails);
     },
     persistWorkDetails: function (work) {
-        if (WorkDetails.findOne({id: work.id}) == undefined) {
-            WorkDetails.insert(work);
-        } else {
-            WorkDetails.update({id: work.id}, work);
-        }
+        work.lastUpdate = new Date();
+        Works.update({id: work.work_id}, {$set: {workDetails: work}});
     },
     getWorkDetails: function (id) {
         // var result = HTTP.get("http://cdn.animenewsnetwork.com/encyclopedia/api.xml", {
@@ -145,11 +141,20 @@ Meteor.methods({
                 batchIDs = [];
             }
         });
-    }
-});
+    },
+    createWorkQueryObject: function (filters) {
+        var queryObject = {};
+        if (filters.themes != undefined && filters.themes != "") {
+            var themes = {$in: []};
+            filters.themes.forEach(function (theme) {
+                themes.$in.push(theme);
+            });
 
-Meteor.publish("allWorks", function () {
-    return Works.find({});
+            queryObject["themes"] = themes;
+            console.log(queryObject);
+        }
+
+    }
 });
 
 Meteor.publish("allGenres", function () {
@@ -164,7 +169,19 @@ Meteor.publish("allThemes", function () {
     return Themes.find({});
 });
 
-//TODO REMOVE THIS
-Meteor.publish("allDetails",function(){
-    return WorkDetails.find({});
+Meteor.publish("searchThemes", function (query) {
+    var search = new RegExp("^" + query, "i");
+    return Themes.find({name: search}).sort({name: 1});
+});
+
+Meteor.publish("filteredWorks", function (filters) {
+    if (filters != null) {
+
+        if (filters.themes != undefined && filters.themes != "") {
+            var themes = filters.themes.split(",");
+            filters.themes = themes;
+        }
+
+        Meteor.call("createWorkQueryObject", filters);
+    }
 });
