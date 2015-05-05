@@ -86,8 +86,21 @@ Meteor.methods({
                     if (workInfoValue.toLowerCase() == "ma") {
                         workDetails.mature = true;
                     }
+                } else if (workfInfoType.toLowerCase() == "picture") {
+                    var workImg = workInfo[key].img[1];
+                    if(workImg !== undefined){
+                        workDetails.picture = workImg.$;
+                    } else {
+                        if(workInfo[key].img[0] !== undefined){
+                            workDetails.picture = workInfo[key].img[0].$;
+                        }
+                    }
                 }
             });
+        }
+
+        if(!_.has(workDetails,"picture")){
+            workDetails.picture={src:"/default.jpg", temporary:true};
         }
 
         Meteor.call("persistWorkDetails", workDetails);
@@ -143,14 +156,12 @@ Meteor.methods({
             queryObject.type = types;
         }
         if (filters.genres !== undefined && filters.genres !== "") {
-            //var genres = {$and: []};
             filters.genres.forEach(function (genre) {
                 var genreObj = {"workDetails.genres": genre};
                 $and.push(genreObj);
             });
         }
         if (filters.themes !== undefined && filters.themes !== "") {
-            //var themes = {$and: []};
             filters.themes.forEach(function (theme) {
                 var themeObj = {"workDetails.themes": theme};
                 $and.push(themeObj);

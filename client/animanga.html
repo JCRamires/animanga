@@ -19,7 +19,9 @@
             </div>
 
             <div class="ten wide column">
-                {{#each works}} {{> work}} {{/each}}
+                <div class="ui four column grid">
+                    {{#each works}} {{> work}} {{/each}}
+                </div>
             </div>
         </div>
     </div>
@@ -27,8 +29,8 @@
 </body>
 
 <template name="work">
-    <div class="row">
-        {{name}}
+    <div class="column">
+        <img class="ui medium rounded image" src="{{workDetails.picture.src}}" alt="{{name}}">
     </div>
 </template>
 
@@ -48,9 +50,7 @@
                 {{#each genres}} {{>genre}} {{/each}}
             </div>
 
-            <div id="themesInput">
-                {{>theme}}
-            </div>
+            {{>theme}}
 
         </div>
     </form>
