@@ -3,51 +3,49 @@
 </head>
 
 <body>
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <h1>List of works</h1>
+<main class="ui page grid">
+    <div class="ui grid">
+        <div class="row">
+            <div class="six wide column">
+                <h2>logo goes here</h2>
+            </div>
+            <div class="ten wide right aligned column">
+                <h2>header goes here</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="six wide column">
+                {{>filterForm}}
+            </div>
+
+            <div class="ten wide column">
+                {{#each works}} {{> work}} {{/each}}
+            </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-4">
-            {{>filterForm}}
-        </div>
-        <div class="col-md-8">
-            {{#each details}} {{> detail}} {{/each}}
-        </div>
-    </div>
-</div>
+</main>
 </body>
 
 <template name="work">
-    <div class="media">
-        <div class="media-left">
-            <img class="media-object" src="http://placehold.it/200x300" alt="{{name}}">
-        </div>
-        <div class="media-body">
-            <h4 class="media-heading">{{name}}</h4>
-        </div>
+    <div class="row">
+        {{name}}
     </div>
 </template>
 
 <template name="filterForm">
     <form id="filters">
         <div class="form-group">
+
             <h2>Type</h2>
 
-            <div id="typeCheckboxes">
-                <div class="row">
-                    {{#each types}} {{>type}} {{/each}}
-                </div>
+            <div class="ui four column grid">
+                {{#each types}} {{>type}} {{/each}}
             </div>
 
             <h2>Genre</h2>
 
-            <div id="genreCheckboxes">
-                <div class="row">
-                    {{#each genres}} {{>genre}} {{/each}}
-                </div>
+            <div class="ui three column grid">
+                {{#each genres}} {{>genre}} {{/each}}
             </div>
 
             <div id="themesInput">
@@ -59,18 +57,20 @@
 </template>
 
 <template name="type">
-    <div class="col-md-4">
-        <label class="checkbox-inline">
-            <input type="checkbox" name="types[]" value="{{name}}"> {{name}}
-        </label>
+    <div class="column">
+        <div class="ui checkbox">
+            <input id="type-{{_id}}" type="checkbox" name="types[]" value="{{name}}">
+            <label for="type-{{_id}}">{{name}}</label>
+        </div>
     </div>
 </template>
 
 <template name="genre">
-    <div class="col-md-4">
-        <label class="checkbox-inline">
-            <input type="checkbox" name="genres[]" value="{{name}}"> {{name}}
-        </label>
+    <div class="column">
+        <div class="ui checkbox">
+            <input id="genre-{{_id}}" type="checkbox" name="genres[]" value="{{name}}">
+            <label for="genre-{{_id}}">{{name}}</label>
+        </div>
     </div>
 </template>
 

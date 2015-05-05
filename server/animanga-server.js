@@ -96,17 +96,6 @@ Meteor.methods({
         work.lastUpdate = new Date();
         Works.update({id: work.work_id}, {$set: {workDetails: work}});
     },
-    getWorkDetails: function (id) {
-        // var result = HTTP.get("http://cdn.animenewsnetwork.com/encyclopedia/api.xml", {
-        //     params: {
-        //         title: id,
-        //     }
-        // });
-        // var details = xml2js.parseStringSync(result.content);
-        // return details;
-
-        return WorkDetails.findOne({id: id});
-    },
     workDetailsBatch: function (workIDs) {
         var batchIDs = [];
         workIDs.forEach(function (id, index) {
@@ -144,6 +133,7 @@ Meteor.methods({
     },
     createWorkQueryObject: function (filters) {
         var queryObject = {};
+        var $and = [];
         if (filters.types !== undefined && filters.types !== "") {
             var types = {$in: []};
             filters.types.forEach(function (type) {
@@ -153,20 +143,22 @@ Meteor.methods({
             queryObject.type = types;
         }
         if (filters.genres !== undefined && filters.genres !== "") {
-            var genres = {$in: []};
+            //var genres = {$and: []};
             filters.genres.forEach(function (genre) {
-                genres.$in.push(genre);
+                var genreObj = {"workDetails.genres": genre};
+                $and.push(genreObj);
             });
-
-            queryObject["workDetails.genres"] = genres;
         }
         if (filters.themes !== undefined && filters.themes !== "") {
-            var themes = {$in: []};
+            //var themes = {$and: []};
             filters.themes.forEach(function (theme) {
-                themes.$in.push(theme);
+                var themeObj = {"workDetails.themes": theme};
+                $and.push(themeObj);
             });
+        }
 
-            queryObject["workDetails.themes"] = themes;
+        if(_.size($and) !== 0){
+            queryObject.$and = $and;
         }
 
         return queryObject;
@@ -175,15 +167,15 @@ Meteor.methods({
 });
 
 Meteor.publish("allGenres", function () {
-    return Genres.find({});
+return Genres.find({}, {sort: {name: 1}});
 });
 
 Meteor.publish("allTypes", function () {
-    return Types.find({});
+    return Types.find({}, {sort: {name: 1}});
 });
 
 Meteor.publish("allThemes", function () {
-    return Themes.find({});
+    return Themes.find({}, {sort: {name: 1}});
 });
 
 Meteor.publish("searchThemes", function (query) {
@@ -199,6 +191,10 @@ Meteor.publish("filteredWorks", function (filters) {
 
         var queryObject = Meteor.call("createWorkQueryObject", filters);
 
-        return Works.find(queryObject);
+        if (_.isEmpty(queryObject)) {
+            return [];
+        }
+
+        return Works.find(queryObject, {});
     }
 });

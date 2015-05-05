@@ -7,6 +7,6 @@
 meteor-platform
 peerlibrary:xml2js
 http
-twbs:bootstrap
 jeremy:selectize
 pcel:serialize
+semantic:ui-css

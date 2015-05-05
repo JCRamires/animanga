@@ -9,6 +9,12 @@ Types = new Mongo.Collection("types");
 Meteor.subscribe("allThemes");
 Themes = new Mongo.Collection("themes");
 
+Template.body.helpers({
+    works: function () {
+        return Works.find({});
+    }
+});
+
 Template.filterForm.helpers({
     types: function () {
         return Types.find({});
@@ -22,7 +28,7 @@ Template.filterForm.helpers({
 });
 
 Template.filterForm.events({
-    "change #filters": function (event){
+    "change #filters": function (){
         Session.set("filters",$("#filters").serializeJSON());
     }
 });
