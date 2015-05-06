@@ -30,7 +30,17 @@
 
 <template name="work">
     <div class="column">
-        <img class="ui medium rounded image" src="{{workDetails.picture.src}}" alt="{{name}}">
+        <div class="ui card">
+            <div class="image">
+                <img class="ui medium rounded" src="{{workDetails.picture.src}}" alt="{{name}}">
+            </div>
+            <div class="content">
+                <div class="header">{{name}}</div>
+                <div class="meta">
+                    {{workDetails.alternativeTitle}}
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 

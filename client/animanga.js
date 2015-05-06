@@ -28,8 +28,8 @@ Template.filterForm.helpers({
 });
 
 Template.filterForm.events({
-    "change #filters": function (){
-        Session.set("filters",$("#filters").serializeJSON());
+    "change #filters": function () {
+        Session.set("filters", $("#filters").serializeJSON());
     }
 });
 
@@ -51,7 +51,7 @@ Template.theme.onRendered(function () {
     });
 });
 
-Tracker.autorun(function(){
+Tracker.autorun(function () {
     var filters = Session.get("filters");
     Meteor.subscribe("filteredWorks", filters);
 });

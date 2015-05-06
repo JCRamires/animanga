@@ -88,19 +88,21 @@ Meteor.methods({
                     }
                 } else if (workfInfoType.toLowerCase() == "picture") {
                     var workImg = workInfo[key].img[1];
-                    if(workImg !== undefined){
+                    if (workImg !== undefined) {
                         workDetails.picture = workImg.$;
                     } else {
-                        if(workInfo[key].img[0] !== undefined){
+                        if (workInfo[key].img[0] !== undefined) {
                             workDetails.picture = workInfo[key].img[0].$;
                         }
                     }
+                } else if (workfInfoType.toLowerCase() == "alternative title" && workInfo[key].$.lang.toLowerCase() == "ja") {
+                    workDetails.alternativeTitle = workInfoValue;
                 }
             });
         }
 
-        if(!_.has(workDetails,"picture")){
-            workDetails.picture={src:"/default.jpg", temporary:true};
+        if (!_.has(workDetails, "picture")) {
+            workDetails.picture = {src: "/default.jpg", temporary: true};
         }
 
         Meteor.call("persistWorkDetails", workDetails);
@@ -168,7 +170,7 @@ Meteor.methods({
             });
         }
 
-        if(_.size($and) !== 0){
+        if (_.size($and) !== 0) {
             queryObject.$and = $and;
         }
 
@@ -178,7 +180,7 @@ Meteor.methods({
 });
 
 Meteor.publish("allGenres", function () {
-return Genres.find({}, {sort: {name: 1}});
+    return Genres.find({}, {sort: {name: 1}});
 });
 
 Meteor.publish("allTypes", function () {
