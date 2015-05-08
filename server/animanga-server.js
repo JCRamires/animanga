@@ -7,10 +7,6 @@ Themes = new Mongo.Collection("themes");
 Themes._ensureIndex({name: 1}, {unique: 1});
 
 Meteor.startup(function () {
-    // Works.remove({});
-    // Genres.remove({});
-    // Types.remove({});
-
     if (Works.find().count() === 0) {
         Meteor.call("initializeDB");
     }
@@ -22,7 +18,7 @@ Meteor.methods({
         var result = HTTP.get("http://www.animenewsnetwork.com/encyclopedia/reports.xml", {
             params: {
                 id: 155,
-                nlist: 200 //or "all"
+                nlist: 1000 //or "all"
             }
         });
 
@@ -37,13 +33,17 @@ Meteor.methods({
         Meteor.call("workDetailsBatch", workIDs);
     },
     addWork: function (entry) {
-        Works.insert({
-            id: entry.id,
-            gid: entry.gid,
-            name: entry.name,
-            type: entry.type,
-            vintage: entry.vintage
-        });
+        var type = entry.type.toString();
+        var workObj = {id: entry.id, gid: entry.gid, name: entry.name, type: entry.type, vintage: entry.vintage};
+        if (type === "TV" || type === "OAV" || type === "ONA") {
+            workObj.series = true;
+        } else if(type === "movie"){
+            workObj.movie = true;
+        } else if(type === "manga"){
+            workObj.manga = true;
+        }
+
+        Works.insert(workObj);
     },
     addWorkDetails: function (work) {
         Meteor.call("addTypeFromWork", work);
@@ -152,17 +152,27 @@ Meteor.methods({
         if (filters.types !== undefined && filters.types !== "") {
             var types = {$in: []};
             filters.types.forEach(function (type) {
-                types.$in.push(type);
+                if (type === "series") {
+                    types.$in.push("TV");
+                    types.$in.push("OAV");
+                    types.$in.push("ONA");
+                } else if (type === "movies") {
+                    types.$in.push("movie");
+                } else if (type === "manga") {
+                    types.$in.push(type);
+                }
             });
 
             queryObject.type = types;
         }
+
         if (filters.genres !== undefined && filters.genres !== "") {
             filters.genres.forEach(function (genre) {
                 var genreObj = {"workDetails.genres": genre};
                 $and.push(genreObj);
             });
         }
+
         if (filters.themes !== undefined && filters.themes !== "") {
             filters.themes.forEach(function (theme) {
                 var themeObj = {"workDetails.themes": theme};
@@ -183,10 +193,6 @@ Meteor.publish("allGenres", function () {
     return Genres.find({}, {sort: {name: 1}});
 });
 
-Meteor.publish("allTypes", function () {
-    return Types.find({}, {sort: {name: 1}});
-});
-
 Meteor.publish("allThemes", function () {
     return Themes.find({}, {sort: {name: 1}});
 });
@@ -198,6 +204,10 @@ Meteor.publish("searchThemes", function (query) {
 
 Meteor.publish("filteredWorks", function (filters) {
     if (filters !== null) {
+        if (filters.genres !== undefined && filters.genres !== "") {
+            filters.genres = filters.genres.split(",");
+        }
+
         if (filters.themes !== undefined && filters.themes !== "") {
             filters.themes = filters.themes.split(",");
         }
@@ -208,6 +218,6 @@ Meteor.publish("filteredWorks", function (filters) {
             return [];
         }
 
-        return Works.find(queryObject, {});
+        return Works.find(queryObject, {sort: {name: 1}});
     }
 });

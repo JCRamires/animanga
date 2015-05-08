@@ -3,37 +3,41 @@ Works = new Mongo.Collection("works");
 Meteor.subscribe("allGenres");
 Genres = new Mongo.Collection("genres");
 
-Meteor.subscribe("allTypes");
-Types = new Mongo.Collection("types");
-
 Meteor.subscribe("allThemes");
 Themes = new Mongo.Collection("themes");
 
 Template.body.helpers({
     works: function () {
-        return Works.find({});
+        return Works.find({}, {sort: {name:1}});
     }
 });
 
-Template.filterForm.helpers({
-    types: function () {
-        return Types.find({});
-    },
+Template.body.helpers({
     genres: function () {
-        return Genres.find({});
+        return Genres.find({}, {sort: {name:1}});
     },
     themes: function () {
-        return Themes.find({});
+        return Themes.find({}, {sort: {name:1}});
     }
 });
 
-Template.filterForm.events({
+Template.menuNavbar.events({
     "change #filters": function () {
         Session.set("filters", $("#filters").serializeJSON());
     }
 });
 
-Template.theme.onRendered(function () {
+Template.menuNavbar.onRendered(function () {
+    $("#genreSelect").selectize({
+        valueField: "name",
+        labelField: "name",
+        searchField: "name",
+        load: function (query, callback) {
+            var genres = Genres.find({});
+            callback(genres.fetch());
+        }
+    });
+
     $("#themeSelect").selectize({
         valueField: "name",
         labelField: "name",
