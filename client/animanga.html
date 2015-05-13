@@ -5,14 +5,14 @@
 <body>
 {{>menuNavbar}}
 
-<div class="ui six column grid">
+<div class="ui grid segmented">
     {{#each works}} {{> work}} {{/each}}
 </div>
 
 </body>
 
 <template name="work">
-    <div class="column">
+    <div class="four wide column worksGrid">
         <div class="ui
         {{#if series}} red {{/if}}
         {{#if movie}} green {{/if}}

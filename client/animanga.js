@@ -8,16 +8,16 @@ Themes = new Mongo.Collection("themes");
 
 Template.body.helpers({
     works: function () {
-        return Works.find({}, {sort: {name:1}});
+        return Works.find({}, {sort: {name: 1}});
     }
 });
 
 Template.body.helpers({
     genres: function () {
-        return Genres.find({}, {sort: {name:1}});
+        return Genres.find({}, {sort: {name: 1}});
     },
     themes: function () {
-        return Themes.find({}, {sort: {name:1}});
+        return Themes.find({}, {sort: {name: 1}});
     }
 });
 
