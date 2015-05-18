@@ -5,22 +5,22 @@
 <body>
 {{>menuNavbar}}
 
-<div class="ui grid segmented">
+<div class="ui grid segment">
     {{#each works}} {{> work}} {{/each}}
 </div>
 
 </body>
 
 <template name="work">
-    <div class="four wide column worksGrid">
+    <div class="four wide column worksGrid  ">
         <div class="ui
         {{#if series}} red {{/if}}
         {{#if movie}} green {{/if}}
         {{#if manga}} blue {{/if}}
          card">
-            <div class="image">
+            <a class="image workCard" href="#" data-workId="{{id}}">
                 <img class="ui medium rounded" src="{{workDetails.picture.src}}" alt="{{name}}">
-            </div>
+            </a>
             <div class="content">
                 <i class="right floated
                     {{#if series}} desktop {{/if}}
@@ -74,4 +74,33 @@
             </div>
         </div>
     </form>
+</template>
+
+<template name="workModal">
+    <div class="ui basic modal">
+        <i class="close icon"></i>
+        <div class="header">
+            Archive Old Messages
+        </div>
+        <div class="content">
+            <div class="image">
+                <i class="archive icon"></i>
+            </div>
+            <div class="description">
+                <p>Your inbox is getting full, would you like us to enable automatic archiving of old messages?</p>
+            </div>
+        </div>
+        <div class="actions">
+            <div class="two fluid ui inverted buttons">
+                <div class="ui red basic inverted button">
+                    <i class="remove icon"></i>
+                    No
+                </div>
+                <div class="ui green basic inverted button">
+                    <i class="checkmark icon"></i>
+                    Yes
+                </div>
+            </div>
+        </div>
+    </div>
 </template>

@@ -185,7 +185,6 @@ Meteor.methods({
         }
 
         return queryObject;
-
     }
 });
 

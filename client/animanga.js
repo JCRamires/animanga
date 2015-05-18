@@ -21,6 +21,12 @@ Template.body.helpers({
     }
 });
 
+Template.work.events({
+    "click .workCard": function (event) {
+        event.preventDefault();
+    }
+});
+
 Template.menuNavbar.events({
     "change #filters": function () {
         Session.set("filters", $("#filters").serializeJSON());
