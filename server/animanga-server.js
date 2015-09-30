@@ -201,7 +201,7 @@ Meteor.publish("searchThemes", function (query) {
     return Themes.find({name: search}).sort({name: 1});
 });
 
-Meteor.publish("filteredWorks", function (filters) {
+Meteor.publish("filteredWorks", function (filters, limit) {
     if (filters !== null) {
         if (filters.genres !== undefined && filters.genres !== "") {
             filters.genres = filters.genres.split(",");
@@ -217,6 +217,6 @@ Meteor.publish("filteredWorks", function (filters) {
             return [];
         }
 
-        return Works.find(queryObject, {sort: {name: 1}});
+        return Works.find(queryObject, {sort: {name: 1}, limit: limit});
     }
 });

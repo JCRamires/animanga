@@ -6,6 +6,9 @@ Genres = new Mongo.Collection("genres");
 Meteor.subscribe("allThemes");
 Themes = new Mongo.Collection("themes");
 
+
+var filteredWorksSubscribeHandle;
+
 Template.body.helpers({
     works: function () {
         return Works.find({}, {sort: {name: 1}});
@@ -63,5 +66,30 @@ Template.menuNavbar.onRendered(function () {
 
 Tracker.autorun(function () {
     var filters = Session.get("filters");
-    Meteor.subscribe("filteredWorks", filters);
+    filteredWorksSubscribeHandle = Meteor.subscribeWithPagination('filteredWorks', filters, 20);
+
 });
+
+function loadMore() {
+    var threshold, target = $("#showMoreResults");
+    if (!target.length) return;
+
+    threshold = $(window).scrollTop() + $(window).height() - target.height();
+
+    if (target.offset().top < threshold) {
+        if (!target.data("visible")) {
+            // console.log("target became visible (inside viewable area)");
+            target.data("visible", true);
+            console.log("yahoo")
+            filteredWorksSubscribeHandle.loadNextPage();
+        }
+    } else {
+        if (target.data("visible")) {
+            // console.log("target became invisible (below viewable area)");
+            target.data("visible", false);
+        }
+    }
+
+}
+
+$(window).scroll(loadMore);
