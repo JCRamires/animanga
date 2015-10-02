@@ -1,36 +1,39 @@
 {
-    "rules": {
-        "indent": [
-            2,
-            4
-        ],
-        "quotes": [
-            2,
-            "single"
-        ],
-        "linebreak-style": [
-            2,
-            "unix"
-        ],
-        "semi": [
-            2,
-            "never"
-        ]
-    },
-    "env": {
-        "browser": true
-    },
-    "extends": "eslint:recommended",
-    "globals": {
-        "Meteor": 1,
-        "Mongo": 1,
-        "Works": 1,
-        "Genres": 1,
-        "Types": 1,
-        "Themes": 1,
-        "HTTP": 1,
-        "xml2js": 1,
-        "_": 1
-
-    }
+  "rules": {
+    "indent": [
+      2,
+      4
+    ],
+    "quotes": [
+      2,
+      "single"
+    ],
+    "linebreak-style": [
+      2,
+      "unix"
+    ],
+    "semi": [
+      2,
+      "never"
+    ]
+  },
+  "env": {
+    "browser": true
+  },
+  "extends": "eslint:recommended",
+  "globals": {
+    "Meteor": 1,
+    "Mongo": 1,
+    "Works": 1,
+    "Genres": 1,
+    "Types": 1,
+    "Themes": 1,
+    "HTTP": 1,
+    "xml2js": 1,
+    "_": 1,
+    "Template": 1,
+    "Session": 1,
+    "$": 1,
+    "Tracker": 1
+  }
 }
