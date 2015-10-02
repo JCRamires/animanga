@@ -18,7 +18,7 @@ Meteor.methods({
         var result = HTTP.get('http://www.animenewsnetwork.com/encyclopedia/reports.xml', {
             params: {
                 id: 155,
-                nlist: 1000 //or 'all'
+                nlist: 50 //or 'all'
             }
         })
 
@@ -35,12 +35,16 @@ Meteor.methods({
     addWork: function (entry) {
         var type = entry.type.toString()
         var workObj = {id: entry.id, gid: entry.gid, name: entry.name, type: entry.type, vintage: entry.vintage}
-        if (type === 'TV' || type === 'OAV' || type === 'ONA') {
-            workObj.series = true
-        } else if (type === 'movie') {
-            workObj.movie = true
-        } else if (type === 'manga') {
-            workObj.manga = true
+        switch (type) {
+            case 'TV' || 'OAV' || 'ONA':
+                workObj.series = true
+                break
+            case 'movie':
+                workObj.movie = true
+                break
+            case 'manga':
+                workObj.manga = true
+                break
         }
 
         Works.insert(workObj)
@@ -64,39 +68,50 @@ Meteor.methods({
             Object.keys(workInfo).forEach(function (key) {
                 var workfInfoType = workInfo[key].$.type
                 var workInfoValue = workInfo[key]._
-                if (workfInfoType.toLowerCase() == 'genres') {
-                    workDetails.genres.push(workInfoValue)
-                    if (Genres.findOne({name: workInfoValue}) === undefined) {
-                        Genres.insert({
-                            name: workInfoValue
-                        })
-                    }
-                } else if (workfInfoType.toLowerCase() == 'themes') {
-                    workDetails.themes.push(workInfoValue)
-                    if (Themes.findOne({name: workInfoValue.toLowerCase()}) === undefined) {
-                        Themes.insert({
-                            name: workInfoValue.toLowerCase()
-                        })
-                    }
-                } else if (workfInfoType.toLowerCase() == 'main title') {
-                    workDetails.name = workInfoValue
-                } else if (workfInfoType.toLowerCase() == 'plot summary') {
-                    workDetails.plot = workInfoValue
-                } else if (workfInfoType.toLowerCase() == 'objectionable content') {
-                    if (workInfoValue.toLowerCase() == 'ma') {
-                        workDetails.mature = true
-                    }
-                } else if (workfInfoType.toLowerCase() == 'picture') {
-                    var workImg = workInfo[key].img[1]
-                    if (workImg !== undefined) {
-                        workDetails.picture = workImg.$
-                    } else {
-                        if (workInfo[key].img[0] !== undefined) {
-                            workDetails.picture = workInfo[key].img[0].$
+
+                switch (workfInfoType.toLowerCase()) {
+                    case 'genres':
+                        workDetails.genres.push(workInfoValue)
+                        if (Genres.findOne({name: workInfoValue}) === undefined) {
+                            Genres.insert({
+                                name: workInfoValue
+                            })
                         }
-                    }
-                } else if (workfInfoType.toLowerCase() == 'alternative title' && workInfo[key].$.lang.toLowerCase() == 'ja') {
-                    workDetails.alternativeTitle = workInfoValue
+                        break
+                    case 'themes':
+                        workDetails.themes.push(workInfoValue)
+                        if (Themes.findOne({name: workInfoValue.toLowerCase()}) === undefined) {
+                            Themes.insert({
+                                name: workInfoValue.toLowerCase()
+                            })
+                        }
+                        break
+                    case 'main title':
+                        workDetails.name = workInfoValue
+                        break
+                    case 'plot summary':
+                        workDetails.plot = workInfoValue
+                        break
+                    case 'objectionable content':
+                        if (workInfoValue.toLowerCase() == 'ma') {
+                            workDetails.mature = true
+                        }
+                        break
+                    case 'picture':
+                        var workImg = workInfo[key].img[1]
+                        if (workImg !== undefined) {
+                            workDetails.picture = workImg.$
+                        } else {
+                            if (workInfo[key].img[0] !== undefined) {
+                                workDetails.picture = workInfo[key].img[0].$
+                            }
+                        }
+                        break
+                    case 'alternative title':
+                        if (workInfo[key].$.lang.toLowerCase() == 'ja') {
+                            workDetails.alternativeTitle = workInfoValue
+                        }
+                        break
                 }
             })
         }
@@ -148,17 +163,22 @@ Meteor.methods({
     createWorkQueryObject: function (filters) {
         var queryObject = {}
         var $and = []
+
         if (filters.types !== undefined && filters.types !== '') {
             var types = {$in: []}
             filters.types.forEach(function (type) {
-                if (type === 'series') {
-                    types.$in.push('TV')
-                    types.$in.push('OAV')
-                    types.$in.push('ONA')
-                } else if (type === 'movies') {
-                    types.$in.push('movie')
-                } else if (type === 'manga') {
-                    types.$in.push(type)
+                switch (type) {
+                    case 'series':
+                        types.$in.push('TV')
+                        types.$in.push('OAV')
+                        types.$in.push('ONA')
+                        break
+                    case 'movies':
+                        types.$in.push('movie')
+                        break
+                    case 'manga':
+                        types.$in.push(type)
+                        break
                 }
             })
 
