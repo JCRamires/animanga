@@ -61,7 +61,7 @@ Meteor.methods({
         }
     },
     addGenresAndThemesFromWork: function (work) {
-        var workDetails = {work_id: work.$.id, genres: [], themes: []}
+        var workDetails = {workId: work.$.id, genres: [], themes: []}
         var workInfo = work.info
 
         if (typeof workInfo === 'object') {
@@ -93,7 +93,7 @@ Meteor.methods({
                         workDetails.plot = workInfoValue
                         break
                     case 'objectionable content':
-                        if (workInfoValue.toLowerCase() == 'ma') {
+                        if (workInfoValue.toLowerCase() === 'ma') {
                             workDetails.mature = true
                         }
                         break
@@ -108,7 +108,7 @@ Meteor.methods({
                         }
                         break
                     case 'alternative title':
-                        if (workInfo[key].$.lang.toLowerCase() == 'ja') {
+                        if (workInfo[key].$.lang.toLowerCase() === 'ja') {
                             workDetails.alternativeTitle = workInfoValue
                         }
                         break
@@ -124,7 +124,7 @@ Meteor.methods({
     },
     persistWorkDetails: function (work) {
         work.lastUpdate = new Date()
-        Works.update({id: work.work_id}, {$set: {workDetails: work}})
+        Works.update({id: work.workId}, {$set: {workDetails: work}})
     },
     workDetailsBatch: function (workIDs) {
         var batchIDs = []
@@ -132,7 +132,7 @@ Meteor.methods({
             if (batchIDs.length < 50) {
                 batchIDs.push(id)
             }
-            if (batchIDs.length == 50 || index + 1 == workIDs.length) {
+            if (batchIDs.length === 50 || index + 1 === workIDs.length) {
                 var appendIDs
                 batchIDs.forEach(function (id, index) {
                     if (index === 0) {
