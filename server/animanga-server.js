@@ -20,7 +20,7 @@ Meteor.methods({
         var result = HTTP.get('http://www.animenewsnetwork.com/encyclopedia/reports.xml', {
             params: {
                 id: 155,
-                nlist: 50 //or 'all'
+                nlist: 200 //or 'all'
             }
         })
 
