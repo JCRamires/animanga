@@ -8,6 +8,7 @@ Themes = new Mongo.Collection('themes')
 
 
 var filteredWorksSubscribeHandle
+var NUMBER_OF_RECORDS_TO_FETCH = 20
 
 Template.body.helpers({
     works: function () {
@@ -66,13 +67,15 @@ Template.menuNavbar.onRendered(function () {
 
 Tracker.autorun(function () {
     var filters = Session.get('filters')
-    filteredWorksSubscribeHandle = Meteor.subscribeWithPagination('filteredWorks', filters, 20)
+    filteredWorksSubscribeHandle = Meteor.subscribeWithPagination('filteredWorks', filters, NUMBER_OF_RECORDS_TO_FETCH)
 
 })
 
 function loadMore() {
     var threshold, target = $('#showMoreResults')
-    if (!target.length) return
+    if (!target.length){
+        return
+    }
 
     threshold = $(window).scrollTop() + $(window).height() - target.height()
 

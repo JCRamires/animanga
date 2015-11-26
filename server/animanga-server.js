@@ -6,6 +6,8 @@ Types._ensureIndex({name: 1}, {unique: 1})
 Themes = new Mongo.Collection('themes')
 Themes._ensureIndex({name: 1}, {unique: 1})
 
+var NUMBER_OF_WORKS_TO_FETCH_API = 50
+
 Meteor.startup(function () {
     if (Works.find().count() === 0) {
         Meteor.call('initializeDB')
@@ -129,10 +131,10 @@ Meteor.methods({
     workDetailsBatch: function (workIDs) {
         var batchIDs = []
         workIDs.forEach(function (id, index) {
-            if (batchIDs.length < 50) {
+            if (batchIDs.length < NUMBER_OF_WORKS_TO_FETCH_API) {
                 batchIDs.push(id)
             }
-            if (batchIDs.length === 50 || index + 1 === workIDs.length) {
+            if (batchIDs.length === NUMBER_OF_WORKS_TO_FETCH_API || index + 1 === workIDs.length) {
                 var appendIDs
                 batchIDs.forEach(function (id, index) {
                     if (index === 0) {
