@@ -1,0 +1,29 @@
+{
+    "rules": {
+        "indent": [2, 4, {"SwitchCase": 1}],
+        "quotes": [2, "single"],
+        "linebreak-style": [2, "unix"],
+        "eqeqeq": [2, "smart"],
+        "no-else-return": 2,
+        "no-alert": 2,
+        "no-eq-null": 2,
+        "no-magic-numbers": 2,
+        "camelcase": 2,
+        "eol-last": 2,
+        "no-redeclare": 2
+    },
+    "env": {
+        "browser": true,
+        "es6": true,
+        "meteor": true,
+        "jquery": true
+    },
+    "extends": "eslint:recommended",
+    "globals": {
+        "Works": 1,
+        "Genres": 1,
+        "Types": 1,
+        "Themes": 1,
+        "xml2js": 1,
+    }
+}
