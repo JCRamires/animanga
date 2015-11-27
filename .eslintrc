@@ -13,22 +13,17 @@
         "no-redeclare": 2
     },
     "env": {
-        "browser": true
+        "browser": true,
+        "es6": true,
+        "meteor": true,
+        "jquery": true
     },
     "extends": "eslint:recommended",
     "globals": {
-        "Meteor": 1,
-        "Mongo": 1,
         "Works": 1,
         "Genres": 1,
         "Types": 1,
         "Themes": 1,
-        "HTTP": 1,
         "xml2js": 1,
-        "_": 1,
-        "Template": 1,
-        "Session": 1,
-        "$": 1,
-        "Tracker": 1
     }
 }

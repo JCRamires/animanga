@@ -1,5 +1,3 @@
-var $window = $(window)
-
 Works = new Mongo.Collection('works')
 
 Meteor.subscribe('allGenres')
@@ -9,8 +7,9 @@ Meteor.subscribe('allThemes')
 Themes = new Mongo.Collection('themes')
 
 
-var filteredWorksSubscribeHandle
-var NUMBER_OF_RECORDS_TO_FETCH = 20
+let filteredWorksSubscribeHandle
+const NUMBER_OF_RECORDS_TO_FETCH = 20
+const $window = $(window)
 
 Template.body.helpers({
     works: function () {
@@ -45,7 +44,7 @@ Template.menuNavbar.onRendered(function () {
         labelField: 'name',
         searchField: 'name',
         load: function (query, callback) {
-            var genres = Genres.find({})
+            let genres = Genres.find({})
             callback(genres.fetch())
         }
     })
@@ -61,20 +60,20 @@ Template.menuNavbar.onRendered(function () {
             }
         },
         load: function (query, callback) {
-            var themes = Themes.find({})
+            let themes = Themes.find({})
             callback(themes.fetch())
         }
     })
 })
 
 Tracker.autorun(function () {
-    var filters = Session.get('filters')
+    const filters = Session.get('filters')
     filteredWorksSubscribeHandle = Meteor.subscribeWithPagination('filteredWorks', filters, NUMBER_OF_RECORDS_TO_FETCH)
 
 })
 
 function loadMore() {
-    var threshold, target = $('#showMoreResults')
+    let threshold, target = $('#showMoreResults')
     if (!target.length){
         return
     }

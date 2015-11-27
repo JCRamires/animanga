@@ -6,7 +6,7 @@ Types._ensureIndex({name: 1}, {unique: 1})
 Themes = new Mongo.Collection('themes')
 Themes._ensureIndex({name: 1}, {unique: 1})
 
-var NUMBER_OF_WORKS_TO_FETCH_API = 50
+const NUMBER_OF_WORKS_TO_FETCH_API = 50
 
 Meteor.startup(function () {
     if (Works.find().count() === 0) {
@@ -17,15 +17,15 @@ Meteor.startup(function () {
 Meteor.methods({
     initializeDB: function () {
         console.log('Fetching works')
-        var result = HTTP.get('http://www.animenewsnetwork.com/encyclopedia/reports.xml', {
+        const result = HTTP.get('http://www.animenewsnetwork.com/encyclopedia/reports.xml', {
             params: {
                 id: 155,
                 nlist: 200 //or 'all'
             }
         })
 
-        var workIDs = []
-        var works = xml2js.parseStringSync(result.content)
+        let workIDs = []
+        const works = xml2js.parseStringSync(result.content)
         works.report.item.forEach(function (entry) {
             Meteor.call('addWork', entry)
             workIDs.push(parseInt(entry.id))
@@ -35,8 +35,8 @@ Meteor.methods({
         Meteor.call('workDetailsBatch', workIDs)
     },
     addWork: function (entry) {
-        var type = entry.type.toString()
-        var workObj = {id: entry.id, gid: entry.gid, name: entry.name, type: entry.type, vintage: entry.vintage}
+        let type = entry.type.toString()
+        let workObj = {id: entry.id, gid: entry.gid, name: entry.name, type: entry.type, vintage: entry.vintage}
         switch (type) {
             case 'TV' || 'OAV' || 'ONA':
                 workObj.series = true
@@ -63,13 +63,13 @@ Meteor.methods({
         }
     },
     addGenresAndThemesFromWork: function (work) {
-        var workDetails = {workId: work.$.id, genres: [], themes: []}
-        var workInfo = work.info
+        let workDetails = {workId: work.$.id, genres: [], themes: []}
+        let workInfo = work.info
 
         if (typeof workInfo === 'object') {
             Object.keys(workInfo).forEach(function (key) {
-                var workfInfoType = workInfo[key].$.type
-                var workInfoValue = workInfo[key]._
+                let workfInfoType = workInfo[key].$.type
+                let workInfoValue = workInfo[key]._
 
                 switch (workfInfoType.toLowerCase()) {
                     case 'genres':
@@ -100,7 +100,7 @@ Meteor.methods({
                         }
                         break
                     case 'picture':
-                        var workImg = workInfo[key].img[1]
+                        let workImg = workInfo[key].img[1]
                         if (workImg !== undefined) {
                             workDetails.picture = workImg.$
                         } else {
@@ -129,13 +129,13 @@ Meteor.methods({
         Works.update({id: work.workId}, {$set: {workDetails: work}})
     },
     workDetailsBatch: function (workIDs) {
-        var batchIDs = []
+        let batchIDs = []
         workIDs.forEach(function (id, index) {
             if (batchIDs.length < NUMBER_OF_WORKS_TO_FETCH_API) {
                 batchIDs.push(id)
             }
             if (batchIDs.length === NUMBER_OF_WORKS_TO_FETCH_API || index + 1 === workIDs.length) {
-                var appendIDs
+                let appendIDs
                 batchIDs.forEach(function (id, index) {
                     if (index === 0) {
                         appendIDs = id
@@ -144,11 +144,11 @@ Meteor.methods({
                     }
                 })
 
-                var result = HTTP.get('http://cdn.animenewsnetwork.com/encyclopedia/api.xml', {
+                const result = HTTP.get('http://cdn.animenewsnetwork.com/encyclopedia/api.xml', {
                     query: 'title=' + appendIDs
                 })
 
-                var works = xml2js.parseStringSync(result.content)
+                const works = xml2js.parseStringSync(result.content)
 
                 Object.keys(works.ann).forEach(function (key) {
                     works.ann[key].forEach(function (work) {
@@ -163,11 +163,11 @@ Meteor.methods({
         })
     },
     createWorkQueryObject: function (filters) {
-        var queryObject = {}
-        var $and = []
+        let queryObject = {}
+        let $and = []
 
         if (filters.types !== undefined && filters.types !== '') {
-            var types = {$in: []}
+            let types = {$in: []}
             filters.types.forEach(function (type) {
                 switch (type) {
                     case 'series':
@@ -189,14 +189,14 @@ Meteor.methods({
 
         if (filters.genres !== undefined && filters.genres !== '') {
             filters.genres.forEach(function (genre) {
-                var genreObj = {'workDetails.genres': genre}
+                let genreObj = {'workDetails.genres': genre}
                 $and.push(genreObj)
             })
         }
 
         if (filters.themes !== undefined && filters.themes !== '') {
             filters.themes.forEach(function (theme) {
-                var themeObj = {'workDetails.themes': theme}
+                let themeObj = {'workDetails.themes': theme}
                 $and.push(themeObj)
             })
         }
@@ -218,7 +218,7 @@ Meteor.publish('allThemes', function () {
 })
 
 Meteor.publish('searchThemes', function (query) {
-    var search = new RegExp('^' + query, 'i')
+    const search = new RegExp('^' + query, 'i')
     return Themes.find({name: search}).sort({name: 1})
 })
 
@@ -232,7 +232,7 @@ Meteor.publish('filteredWorks', function (filters, limit) {
             filters.themes = filters.themes.split(',')
         }
 
-        var queryObject = Meteor.call('createWorkQueryObject', filters)
+        const queryObject = Meteor.call('createWorkQueryObject', filters)
 
         if (_.isEmpty(queryObject)) {
             return []
