@@ -211,20 +211,16 @@ Meteor.methods({
     }
 })
 
-Meteor.publish('allGenres', function () {
-    return Genres.find({}, {sort: {name: 1}})
-})
+Meteor.publish('allGenres', () => Genres.find({}, {sort: {name: 1}}))
 
-Meteor.publish('allThemes', function () {
-    return Themes.find({}, {sort: {name: 1}})
-})
+Meteor.publish('allThemes', () => Themes.find({}, {sort: {name: 1}}))
 
-Meteor.publish('searchThemes', function (query) {
+Meteor.publish('searchThemes', query => {
     const search = new RegExp('^' + query, 'i')
     return Themes.find({name: search}).sort({name: 1})
 })
 
-Meteor.publish('filteredWorks', function (filters, limit) {
+Meteor.publish('filteredWorks', (filters, limit) => {
     if (filters !== null) {
         if (filters.genres !== undefined && filters.genres !== '') {
             filters.genres = filters.genres.split(',')
