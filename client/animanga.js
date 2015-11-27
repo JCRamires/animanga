@@ -1,3 +1,5 @@
+var $window = $(window)
+
 Works = new Mongo.Collection('works')
 
 Meteor.subscribe('allGenres')
@@ -77,7 +79,7 @@ function loadMore() {
         return
     }
 
-    threshold = $(window).scrollTop() + $(window).height() - target.height()
+    threshold = $window.scrollTop() + $window.height() - target.height()
 
     if (target.offset().top < threshold) {
         if (!target.data('visible')) {
@@ -92,4 +94,4 @@ function loadMore() {
 
 }
 
-$(window).scroll(loadMore)
+$window.scroll(loadMore)
