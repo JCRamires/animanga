@@ -16,7 +16,9 @@
         "browser": true,
         "es6": true,
         "meteor": true,
-        "jquery": true
+        "jquery": true,
+        "mocha": true,
+        "node": true
     },
     "extends": "eslint:recommended",
     "globals": {

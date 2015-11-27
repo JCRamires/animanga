@@ -15,7 +15,7 @@ Meteor.startup(function () {
 })
 
 Meteor.methods({
-    initializeDB: function () {
+    initializeDB(){
         console.log('Fetching works')
         const result = HTTP.get('http://www.animenewsnetwork.com/encyclopedia/reports.xml', {
             params: {
@@ -34,7 +34,7 @@ Meteor.methods({
         console.log('Fetching work details')
         Meteor.call('workDetailsBatch', workIDs)
     },
-    addWork: function (entry) {
+    addWork(entry){
         let type = entry.type.toString()
         let workObj = {id: entry.id, gid: entry.gid, name: entry.name, type: entry.type, vintage: entry.vintage}
         switch (type) {
@@ -51,20 +51,20 @@ Meteor.methods({
 
         Works.insert(workObj)
     },
-    addWorkDetails: function (work) {
+    addWorkDetails(work){
         if(work.$ !== undefined){
             Meteor.call('addTypeFromWork', work)
             Meteor.call('addGenresAndThemesFromWork', work)
         }
     },
-    addTypeFromWork: function (work) {
+    addTypeFromWork(work){
         if (Types.findOne({name: work.$.type}) === undefined) {
             Types.insert({
                 name: work.$.type
             })
         }
     },
-    addGenresAndThemesFromWork: function (work) {
+    addGenresAndThemesFromWork(work){
         let workDetails = {workId: work.$.id, genres: [], themes: []}
         let workInfo = work.info
 
@@ -126,11 +126,11 @@ Meteor.methods({
 
         Meteor.call('persistWorkDetails', workDetails)
     },
-    persistWorkDetails: function (work) {
+    persistWorkDetails(work){
         work.lastUpdate = new Date()
         Works.update({id: work.workId}, {$set: {workDetails: work}})
     },
-    workDetailsBatch: function (workIDs) {
+    workDetailsBatch(workIDs){
         let batchIDs = []
         workIDs.forEach(function (id, index) {
             if (batchIDs.length < NUMBER_OF_WORKS_TO_FETCH_API) {
@@ -164,7 +164,7 @@ Meteor.methods({
             }
         })
     },
-    createWorkQueryObject: function (filters) {
+    createWorkQueryObject(filters){
         let queryObject = {}
         let $and = []
 

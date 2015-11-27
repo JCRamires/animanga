@@ -1,0 +1,9 @@
+{
+    "description": "animanga",
+    "devDependencies": {
+        "chai": "*",
+        "mocha": "*"
+    },
+    "license": "UNLICENSED",
+    "repository" : {"type": "git", "url": "https://github.com/jcramires/animanga.git"}
+}

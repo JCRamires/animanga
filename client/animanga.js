@@ -12,16 +12,16 @@ const NUMBER_OF_RECORDS_TO_FETCH = 20
 const $window = $(window)
 
 Template.body.helpers({
-    works: function () {
+    works(){
         return Works.find({}, {sort: {name: 1}})
     }
 })
 
 Template.body.helpers({
-    genres: function () {
+    genres(){
         return Genres.find({}, {sort: {name: 1}})
     },
-    themes: function () {
+    themes(){
         return Themes.find({}, {sort: {name: 1}})
     }
 })
@@ -43,7 +43,7 @@ Template.menuNavbar.onRendered(function () {
         valueField: 'name',
         labelField: 'name',
         searchField: 'name',
-        load: function (query, callback) {
+        load(query, callback){
             let genres = Genres.find({})
             callback(genres.fetch())
         }
@@ -53,13 +53,13 @@ Template.menuNavbar.onRendered(function () {
         valueField: 'name',
         labelField: 'name',
         searchField: 'name',
-        create: function (input) {
+        create(input){
             return {
                 value: input,
                 text: input
             }
         },
-        load: function (query, callback) {
+        load(query, callback){
             let themes = Themes.find({})
             callback(themes.fetch())
         }
