@@ -52,8 +52,10 @@ Meteor.methods({
         Works.insert(workObj)
     },
     addWorkDetails: function (work) {
-        Meteor.call('addTypeFromWork', work)
-        Meteor.call('addGenresAndThemesFromWork', work)
+        if(work.$ !== undefined){
+            Meteor.call('addTypeFromWork', work)
+            Meteor.call('addGenresAndThemesFromWork', work)
+        }
     },
     addTypeFromWork: function (work) {
         if (Types.findOne({name: work.$.type}) === undefined) {
@@ -140,12 +142,12 @@ Meteor.methods({
                     if (index === 0) {
                         appendIDs = id
                     } else {
-                        appendIDs += '/' + id
+                        appendIDs += `/${id}`
                     }
                 })
 
                 const result = HTTP.get('http://cdn.animenewsnetwork.com/encyclopedia/api.xml', {
-                    query: 'title=' + appendIDs
+                    query: `title=${appendIDs}`
                 })
 
                 const works = xml2js.parseStringSync(result.content)
@@ -156,7 +158,7 @@ Meteor.methods({
                     })
                 })
 
-                console.log('Fetched ' + (index + 1) + ' out of ' + workIDs.length)
+                console.log(`Fetched ${index+1} out of ${workIDs.length}`)
 
                 batchIDs = []
             }
