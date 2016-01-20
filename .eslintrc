@@ -10,7 +10,8 @@
         "no-magic-numbers": 2,
         "camelcase": 2,
         "eol-last": 2,
-        "no-redeclare": 2
+        "no-redeclare": 2,
+        "semi": [2, "always"]
     },
     "env": {
         "browser": true,
