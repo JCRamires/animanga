@@ -75,8 +75,9 @@ function addGenresAndThemesFromWork(work){
 
     if (typeof workInfo === 'object') {
         Object.keys(workInfo).forEach(function (key) {
-            let workfInfoType = workInfo[key].$.type;
-            let workInfoValue = workInfo[key]._;
+            let workInfoObj = workInfo[key];
+            let workfInfoType = workInfoObj.$.type;
+            let workInfoValue = workInfoObj._;
 
             switch (workfInfoType.toLowerCase()) {
                 case 'genres':
@@ -107,17 +108,17 @@ function addGenresAndThemesFromWork(work){
                     }
                     break;
                 case 'picture':
-                    let workImg = workInfo[key].img[1];
+                    let workImg = workInfoObj.img[1];
                     if (workImg !== undefined) {
                         workDetails.picture = workImg.$;
                     } else {
-                        if (workInfo[key].img[0] !== undefined) {
-                            workDetails.picture = workInfo[key].img[0].$;
+                        if (workInfoObj.img[0] !== undefined) {
+                            workDetails.picture = workInfoObj.img[0].$;
                         }
                     }
                     break;
                 case 'alternative title':
-                    if (workInfo[key].$.lang.toLowerCase() === 'ja') {
+                    if (workInfoObj.$.lang.toLowerCase() === 'ja') {
                         workDetails.alternativeTitle = workInfoValue;
                     }
                     break;
