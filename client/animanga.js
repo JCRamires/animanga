@@ -71,25 +71,12 @@ Tracker.autorun(function () {
     filteredWorksSubscribeHandle = Meteor.subscribeWithPagination('filteredWorks', filters, NUMBER_OF_RECORDS_TO_FETCH);
 });
 
-function loadMore() {
-    let threshold, target = $('#showMoreResults');
-    if (!target.length){
-        return;
-    }
-
-    threshold = $window.scrollTop() + $window.height() - target.height();
-
-    if (target.offset().top < threshold) {
-        if (!target.data('visible')) {
-            target.data('visible', true);
+$(function(){
+    $('.main').visibility({
+        once: false,
+        observeChanges: true,
+        onBottomVisible: function(){
             filteredWorksSubscribeHandle.loadNextPage();
         }
-    } else {
-        if (target.data('visible')) {
-            target.data('visible', false);
-        }
-    }
-
-}
-
-$window.scroll(loadMore);
+    })
+})

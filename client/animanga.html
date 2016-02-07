@@ -5,7 +5,7 @@
 <body>
 {{>menuNavbar}}
 
-<div class="ui grid segment">
+<div class="ui grid segment main">
     {{#each works}} {{> work}} {{/each}}
     <div id="showMoreResults" style="margin-left: 25px;">
         <span class="loading">Loading...</span>
@@ -15,7 +15,7 @@
 </body>
 
 <template name="work">
-    <div class="four wide column worksGrid  ">
+    <div class="four wide column worksGrid">
         <div class="ui
         {{#if series}} red {{/if}}
         {{#if movie}} green {{/if}}
