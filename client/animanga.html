@@ -3,10 +3,12 @@
 </head>
 
 <body>
-{{>menuNavbar}}
+<div class="ui left fixed vertical menu menu-wrapper">
+    {{>menuBar}}
+</div>
 
-<div class="ui segment main">
-    <div class="ui four column doubling stackable grid">
+<div class="ui main">
+    <div class="ui six column doubling stackable grid">
         {{#each works}} {{> work}} {{/each}}
     </div>
 </div>
@@ -16,9 +18,9 @@
 <template name="work">
     <div class="column worksGrid">
         <div class="ui
-        {{#if series}} red {{/if}}
-        {{#if movie}} green {{/if}}
-        {{#if manga}} blue {{/if}}
+            {{#if series}} red {{/if}}
+            {{#if movie}} green {{/if}}
+            {{#if manga}} blue {{/if}}
          card">
             <a class="image workCard" href="#" data-workId="{{id}}">
                 <img class="ui medium rounded" src="{{workDetails.picture.src}}" alt="{{name}}">
@@ -39,38 +41,43 @@
     </div>
 </template>
 
-<template name="menuNavbar">
+<template name="menuBar">
     <form id="filters">
-        <div class="ui fixed main menu">
-            <div class="ui three column grid">
-                <div class="column">
-                    <div class="ui three column grid">
-                        <div class="column">
-                            <div class="ui checkbox">
-                                <input type="checkbox" id="showAnime" name="types[]" value="series">
-                                <label for="showAnime">Series</label>
-                            </div>
-                        </div>
-                        <div class="column">
-                            <div class="ui checkbox">
-                                <input type="checkbox" id="showMovies" name="types[]" value="movies">
-                                <label for="showMovies">Movies</label>
-                            </div>
-                        </div>
-                        <div class="column">
-                            <div class="ui checkbox">
-                                <input type="checkbox" id="showManga" name="types[]" value="manga">
-                                <label for="showManga">Manga</label>
-                            </div>
-                        </div>
+        <div class="item">
+            <div class="header">Types</div>
+            <div class="menu">
+                <div class="item">
+                    <div class="ui checkbox">
+                        <input type="checkbox" id="showAnime" name="types[]" value="series">
                     </div>
+                    <label for="showAnime">Series</label>
                 </div>
-
-                <div class="column">
+                <div class="item">
+                    <div class="ui checkbox">
+                        <input type="checkbox" id="showMovies" name="types[]" value="movies">
+                    </div>
+                    <label for="showMovies">Movies</label>
+                </div>
+                <div class="item">
+                    <div class="ui checkbox">
+                        <input type="checkbox" id="showManga" name="types[]" value="manga">
+                    </div>
+                    <label for="showManga">Manga</label>
+                </div>
+            </div>
+        </div>
+        <div class="item">
+            <div class="header">Genres</div>
+            <div class="menu">
+                <div class="item">
                     <input type="text" name="genres" id="genreSelect" placeholder="Choose the genres">
                 </div>
-
-                <div class="column">
+            </div>
+        </div>
+        <div class="item">
+            <div class="header">Themes</div>
+            <div class="menu">
+                <div class="item">
                     <input type="text" name="themes" id="themeSelect" placeholder="Type in a theme of your liking">
                 </div>
             </div>
