@@ -9,7 +9,6 @@ Themes = new Mongo.Collection('themes');
 
 let filteredWorksSubscribeHandle;
 const NUMBER_OF_RECORDS_TO_FETCH = 20;
-const $window = $(window);
 
 Template.body.helpers({
     works(){
@@ -78,5 +77,5 @@ $(function(){
         onBottomVisible: function(){
             filteredWorksSubscribeHandle.loadNextPage();
         }
-    })
-})
+    });
+});
