@@ -2,7 +2,8 @@
     "description": "animanga",
     "devDependencies": {
         "chai": "*",
-        "mocha": "*"
+        "mocha": "*",
+        "eslint": "*"
     },
     "license": "UNLICENSED",
     "repository" : {"type": "git", "url": "https://github.com/jcramires/animanga.git"}
