@@ -31,13 +31,13 @@ Template.work.events({
     }
 });
 
-Template.menuNavbar.events({
+Template.menuBar.events({
     'change #filters': function () {
         Session.set('filters', $('#filters').serializeJSON());
     }
 });
 
-Template.menuNavbar.onRendered(function () {
+Template.menuBar.onRendered(function () {
     $('#genreSelect').selectize({
         valueField: 'name',
         labelField: 'name',

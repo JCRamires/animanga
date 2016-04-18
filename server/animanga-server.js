@@ -1,3 +1,5 @@
+const parseString = require('xml2js').parseString
+
 Works = new Mongo.Collection('works');
 Genres = new Mongo.Collection('genres');
 Genres._ensureIndex({name: 1}, {unique: 1});
@@ -25,7 +27,10 @@ Meteor.methods({
         });
 
         let workIDs = [];
-        const works = xml2js.parseStringSync(result.content);
+        let  works
+        parseString(result.content, (err, result) => {
+            works = result
+        });
         works.report.item.forEach(function (entry) {
             addWork(entry);
             workIDs.push(parseInt(entry.id));
@@ -158,7 +163,10 @@ function workDetailsBatch(workIDs){
                 query: `title=${appendIDs}`
             });
 
-            const works = xml2js.parseStringSync(result.content);
+            let works
+            parseString(result.content, (err, result) => {
+                works = result
+            });
 
             Object.keys(works.ann).forEach(function (key) {
                 works.ann[key].forEach(function (work) {
